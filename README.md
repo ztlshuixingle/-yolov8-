@@ -8,10 +8,10 @@
 
 ---
 
-## 1. Project Structure
+## 1.项目架构
 
 ```
-helmet-detection/
+ultralytics/
 ├── datasets/                 # YOLO-format images & labels
 │   ├── images/
 │   │   ├── train/  (2 607 imgs)
@@ -22,8 +22,8 @@ helmet-detection/
 ├── weights/
 │   ├── best.pt
 │   └── last.pt
-├── train.py                  # Ultralytics CLI wrapper
-├── val.py
+├── 训练代码.py                  # Ultralytics CLI wrapper
+├── 检验代码.py
 └── README.md                 # ← you are here
 ```
 
@@ -64,7 +64,7 @@ pip install ultralytics==8.1.0 torch>=1.13 torchvision
 
 > Tested on **CUDA 11.7 + RTX 3060 (12 GB)**; CPU-only also supported.
 
-###  模型训练
+### 5.模型训练
 
 ```bash
 yolo detect train \
@@ -80,65 +80,7 @@ yolo detect train \
 
 ---
 
-## 5. 模型分类评估结果 (验证集)
-
-|分类结果指标          | 值               |
-|------------------|----------------------|
-| **Precision**     | 0.88                 |
-| **Recall**        | 0.79                 |
-| **mAP@0.5**       | 0.84                 |
-| **mAP@0.5:0.95**  | 0.53                 |
-| **Inference FPS** | 68 fps @ 640 × 640  |
-
->  Values based on best epoch — see training curves above.
-
----
-
-
-## 7. Re-training on Your Own Data
-
-1. Label with **LabelImg** or **CVAT** and export to YOLO TXT.
-2. Create a config file (e.g., `helmet.yaml`):
-
-```yaml
-path:  /absolute/path/to/dataset
-train: images/train
-val:   images/val
-nc: 2
-names: [Helmet, NoHelmet]
-```
-
-3. Run training using the command in Section 4.
-
----
-
-## 8. Notes & Tips
-
-- MobileNet + CARAFE achieves **2.5MB** model size with competitive performance.
-- Export to ONNX for deployment:
-  ```bash
-  yolo export model=weights/best.pt format=onnx dynamic
-  ```
-- Tuning Suggestions:
-  - Increase `imgsz=800` if GPU allows
-  - Reduce `mosaic` after 80% epochs
-  - Try `AdamW` + warm-up for noisy data
-
----
-
-## 9. 实验说明
-
-```bibtex
-@misc{helmetyolov8n2025,
-  title   = {Lightweight YOLOv8n for Safety-Helmet Detection},
-  author  = {赵珽李 and 王雨意 and 谢淼},
-  year    = {2025}
-}
-```
-
----
-
-## 10. 训练参数总结
+## 6.训练参数总结
 
 这部分主要是我们本次训练的时候使用到的一些超参数:
 
@@ -158,3 +100,49 @@ names: [Helmet, NoHelmet]
 | `device`         | 0         | GPU device used |
 | `patience`       | 50        | Early stopping patience |
 | `save_dir`       | runs/detect/train3 | Output directory for logs and weights |
+
+## 7.模型分类评估结果 (验证集)
+
+|分类结果指标          | 值               |
+|------------------|----------------------|
+| **Precision**     | 0.88                 |
+| **Recall**        | 0.79                 |
+| **mAP@0.5**       | 0.84                 |
+| **mAP@0.5:0.95**  | 0.53                 |
+| **Inference FPS** | 68 fps @ 640 × 640  |
+
+> 该结果是基于训练结果最好的epoch计算得来
+
+---
+
+
+## 8.如何迁移使用我们的检测代码？
+
+- 1.直接运行检测代码
+- 2.在UI界面中直接上传本地的待检测的图片
+- 3.预训练的模型输出检测结果
+
+---
+
+## 9.模型优势 & 改进建议
+
+- 模型优势：MobileNet + CARAFE 结构使得模型只有**2.5MB,而初始模型有6.23MB**，轻量化改进后模型非常轻便且分类效果仍然较好。
+- 模型未来改进建议:
+  - 如果显卡性能允许，把图像尺寸 imgsz 提高到 800，可以提升精度。
+  - 在训练后期（80% epoch 后）减少 mosaic 数据增强，模型能更稳定。
+  - 如果数据噪声较大，可以尝试用 AdamW 优化器 + 学习率预热 策略。
+
+---
+
+## 10.实验说明
+
+```bibtex
+@misc{helmetyolov8n2025,
+  title   = {基于yolov8的施工现场安全帽检测},
+  author  = {赵珽李 and 王雨意 and 谢淼},
+  year    = {2025}
+}
+```
+
+---
+
