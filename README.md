@@ -3,7 +3,7 @@
 一个轻量级的**YOLOv8n 模型（采用 MobileNet 主干网络和 CARAFE 上采样机制）**，用于检测施工现场人员是否佩戴安全帽。
 
 <p align="center">
-  <img src="ztlshuixingle-patch-1/图片1.png" alt="Training curves" width="800">
+  <img src="-yolov8-/ztlshuixingle-patch-1/图片1.png" alt="Training curves" width="800">
 </p>
 
 ---
