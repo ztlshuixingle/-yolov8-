@@ -62,7 +62,7 @@ conda activate yolo-helmet
 pip install ultralytics==8.1.0 torch>=1.13 torchvision
 ```
 
-> 本实验是基于 **CUDA 11.7 + RTX 3060 (12 GB)**进行的; 模型同时也支持CPU进行训练；
+> 本实验是基于CUDA 11.7 + RTX 3060 (12 GB)进行的; 模型同时也支持CPU进行训练；
 
 ### 5.模型训练
 
