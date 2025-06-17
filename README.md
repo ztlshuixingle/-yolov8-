@@ -29,21 +29,21 @@ helmet-detection/
 
 ---
 
-## 2. Dataset
+## 2. 数据集
 
 | Split | Images | Annotation format |
 |-------|--------|-------------------|
 | Train | 2 607  | YOLO TXT (`class xc yc w h`) |
 | Val   |   682  | YOLO TXT |
 
-- **Classes (2)**: `0 = Person-With-Helmet`, `1 = Person-Without-Helmet`
-- Image resolution varies; all are resized to **640 × 640** during training.
+- **一共有两个分类**: `0 = 没带头盔的人`, `1 = 带头盔的人`
+- 所有图片的大小在训练中都被充值为 **640 × 640** 
 
 ---
 
-## 3. Model Architecture
+## 3. 建模
 
-| Component   | Details |
+| 组成   | 细节 |
 |-------------|---------|
 | **Base**    | YOLOv8n (Ultralytics) |
 | **Backbone**| MobileNet-V3 Small |
@@ -54,7 +54,7 @@ helmet-detection/
 
 ---
 
-## 4. Environment & Training
+## 4. 实验环境和训练配置
 
 ```bash
 conda create -n yolo-helmet python=3.9
@@ -64,15 +64,15 @@ pip install ultralytics==8.1.0 torch>=1.13 torchvision
 
 > Tested on **CUDA 11.7 + RTX 3060 (12 GB)**; CPU-only also supported.
 
-###  Training Command
+###  模型训练
 
 ```bash
 yolo detect train \
   model=models/yolov8n_mobilenet_carafe.yaml \
-  data=datasets/helmet.yaml \
-  epochs=250 imgsz=640 batch=16 \
-  optimizer=SGD lr0=0.01 weight_decay=5e-4 \
-  name=helmet_mnv3_carafe
+  data=datasets/images/train \
+  epochs=300 imgsz=640 batch=16 \
+  optimizer=SGD lr0=0.01 weight_decay=0.0005 \
+  name=yolov8n_mobilenet_carafe
 ```
 
 - Early stopping `patience=50`
@@ -80,9 +80,9 @@ yolo detect train \
 
 ---
 
-## 5. Evaluation Results (Validation Set)
+## 5. 模型分类评估结果 (验证集)
 
-| Metric          | Value                |
+|分类结果指标          | 值               |
 |------------------|----------------------|
 | **Precision**     | 0.88                 |
 | **Recall**        | 0.79                 |
@@ -94,24 +94,6 @@ yolo detect train \
 
 ---
 
-## 6. Inference
-
-```bash
-yolo detect predict \
-  model=weights/best.pt \
-  source=demo/ \
-  imgsz=640 conf=0.25
-```
-
-Sample output:
-
-```
-demo/img_001.jpg: 640x640 1 Person-Helmet, 0.10s  
-demo/img_002.jpg: 640x640 1 Person-NoHelmet, 0.11s  
-Results saved to runs/detect/predict
-```
-
----
 
 ## 7. Re-training on Your Own Data
 
@@ -144,7 +126,7 @@ names: [Helmet, NoHelmet]
 
 ---
 
-## 9. Citation
+## 9. 实验说明
 
 ```bibtex
 @misc{helmetyolov8n2025,
@@ -156,6 +138,23 @@ names: [Helmet, NoHelmet]
 
 ---
 
-## 10. License
+## 10. 训练参数总结
 
-Released under the MIT License.
+这部分主要是我们本次训练的时候使用到的一些超参数:
+
+| Parameter         | Value     | Description |
+|------------------|-----------|-------------|
+| `epochs`         | 300       | Total training rounds |
+| `batch`          | 16        | Batch size per iteration |
+| `imgsz`          | 640       | Input image resolution |
+| `optimizer`      | auto      | Auto-selected (default: SGD) |
+| `lr0`            | 0.01      | Initial learning rate |
+| `momentum`       | 0.937     | Momentum (for SGD) |
+| `weight_decay`   | 0.0005    | Weight regularization |
+| `warmup_epochs`  | 3.0       | Warm-up phase duration |
+| `box` / `cls` / `dfl` | 7.5 / 0.5 / 1.5 | Loss component weights |
+| `mosaic`         | 1.0       | Mosaic augmentation enabled |
+| `fliplr`         | 0.5       | Probability of horizontal flip |
+| `device`         | 0         | GPU device used |
+| `patience`       | 50        | Early stopping patience |
+| `save_dir`       | runs/detect/train3 | Output directory for logs and weights |
