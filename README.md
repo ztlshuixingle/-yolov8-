@@ -3,7 +3,7 @@
 一个轻量级的**YOLOv8n 模型（采用 MobileNet 主干网络和 CARAFE 上采样机制）**，用于检测施工现场人员是否佩戴安全帽。
 
 <p align="center">
-  <img src="图片1.png" alt="Training curves" width="800">
+  <img src="图片1.png" alt="训练曲线" width="800">
 </p>
 
 ---
@@ -24,7 +24,7 @@ ultralytics/
 │   └── last.pt
 ├── 训练代码.py                  # Ultralytics CLI wrapper
 ├── 检验代码.py
-└── README.md                 # ← you are here
+└── README.md                 # ← readme文件所在位置
 ```
 
 ---
@@ -62,7 +62,7 @@ conda activate yolo-helmet
 pip install ultralytics==8.1.0 torch>=1.13 torchvision
 ```
 
-> Tested on **CUDA 11.7 + RTX 3060 (12 GB)**; CPU-only also supported.
+> 本实验是基于 **CUDA 11.7 + RTX 3060 (12 GB)**进行的; 模型同时也支持CPU进行训练；
 
 ### 5.模型训练
 
@@ -111,7 +111,7 @@ yolo detect train \
 | **mAP@0.5:0.95**  | 0.53                 |
 | **Inference FPS** | 68 fps @ 640 × 640  |
 
-> 该结果是基于训练结果最好的epoch计算得来
+> 该结果是基于训练结果最好的epoch计算得来的
 
 ---
 
@@ -130,7 +130,7 @@ yolo detect train \
 - 模型未来改进建议:
   - 如果显卡性能允许，把图像尺寸 imgsz 提高到 800，可以提升精度。
   - 在训练后期（80% epoch 后）减少 mosaic 数据增强，模型能更稳定。
-  - 如果数据噪声较大，可以尝试用 AdamW 优化器 + 学习率预热 策略。
+  - 如果数据噪声较大，可以尝试用 AdamW 优化器 + 学习率预热策略。
 
 ---
 
